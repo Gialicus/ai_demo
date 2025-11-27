@@ -13,6 +13,7 @@ import { storage } from "./storage/storage";
 import { notes } from "./mcp/server";
 import { vector } from "./storage/vector";
 import { summaryAgent } from "./agents/summary-agent";
+import { chatRoute } from "@mastra/ai-sdk";
 
 export const mastra = new Mastra({
   workflows: { weatherWorkflow },
@@ -37,4 +38,11 @@ export const mastra = new Mastra({
     // Enables DefaultExporter and CloudExporter for tracing
     default: { enabled: true },
   }),
+  server: {
+    apiRoutes: [
+      chatRoute({
+        path: "/chat/:agentId",
+      }),
+    ],
+  },
 });
