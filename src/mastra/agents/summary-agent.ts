@@ -1,4 +1,8 @@
 import { Agent } from "@mastra/core/agent";
+import {
+  BatchPartsProcessor,
+  UnicodeNormalizer,
+} from "@mastra/core/processors";
 import { fastembed } from "@mastra/fastembed";
 import { createVectorQueryTool } from "@mastra/rag";
 
@@ -10,7 +14,7 @@ const vectorQueryTool = createVectorQueryTool({
 });
 
 export const summaryAgent = new Agent({
-  id: "summary-agent",
+  id: "summaryAgent",
   name: "Summary Agent",
   instructions: `You are a helpful summary assistant that analyzes academic papers and technical documents.
     Use the provided vector query tool to find relevant information from your knowledge base,
@@ -21,4 +25,17 @@ export const summaryAgent = new Agent({
   tools: {
     vectorQueryTool,
   },
+  inputProcessors: [
+    new UnicodeNormalizer({
+      stripControlChars: true,
+      collapseWhitespace: true,
+    }),
+  ],
+  outputProcessors: [
+    new BatchPartsProcessor({
+      batchSize: 5,
+      maxWaitTime: 100,
+      emitOnNonText: true,
+    }),
+  ],
 });

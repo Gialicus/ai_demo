@@ -14,10 +14,16 @@ import { notes } from "./mcp/server";
 import { vector } from "./storage/vector";
 import { summaryAgent } from "./agents/summary-agent";
 import { chatRoute } from "@mastra/ai-sdk";
+import { agentLoader } from "./loader";
 
 export const mastra = new Mastra({
   workflows: { weatherWorkflow },
-  agents: { weatherAgent, researchAgent, summaryAgent },
+  agents: {
+    weatherAgent,
+    researchAgent,
+    summaryAgent,
+    ...(await agentLoader()),
+  },
   scorers: {
     toolCallAppropriatenessScorer,
     completenessScorer,

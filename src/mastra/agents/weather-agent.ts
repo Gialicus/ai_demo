@@ -3,9 +3,13 @@ import { Memory } from "@mastra/memory";
 import { weatherTool } from "../tools/weather-tool";
 import { scorers } from "../scorers/weather-scorer";
 import { storage } from "../storage/storage";
+import {
+  BatchPartsProcessor,
+  UnicodeNormalizer,
+} from "@mastra/core/processors";
 
 export const weatherAgent = new Agent({
-  id: "weather-agent",
+  id: "weatherAgent",
   name: "Weather Agent",
   instructions: `
       You are a helpful weather assistant that provides accurate weather information and can help planning activities based on the weather.
@@ -49,4 +53,17 @@ export const weatherAgent = new Agent({
   memory: new Memory({
     storage: storage,
   }),
+  inputProcessors: [
+    new UnicodeNormalizer({
+      stripControlChars: true,
+      collapseWhitespace: true,
+    }),
+  ],
+  outputProcessors: [
+    new BatchPartsProcessor({
+      batchSize: 5,
+      maxWaitTime: 100,
+      emitOnNonText: true,
+    }),
+  ],
 });

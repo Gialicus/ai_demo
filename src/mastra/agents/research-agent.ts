@@ -1,12 +1,14 @@
 import { Agent } from "@mastra/core/agent";
-import { Memory } from "@mastra/memory";
-import { storage } from "../storage/storage";
-import { vector } from "../storage/vector";
 import { google } from "@ai-sdk/google";
 import { mcpClient } from "../mcp/client";
+import { defaultMemory } from "../storage/memory";
+import {
+  BatchPartsProcessor,
+  UnicodeNormalizer,
+} from "@mastra/core/processors";
 
 export const researchAgent = new Agent({
-  id: "research-agent",
+  id: "researchAgent",
   name: "Research Agent",
   description: "A research assistant that can search the web for information.",
   instructions: `You are a research assistant that can search the web for information.
@@ -16,19 +18,18 @@ export const researchAgent = new Agent({
     webSearch: google.tools.googleSearch({ mode: "MODE_DYNAMIC" }),
     ...(await mcpClient.listTools()),
   },
-  memory: new Memory({
-    embedder: "google/gemini-embedding-001",
-    storage: storage,
-    vector: vector,
-    options: {
-      workingMemory: {
-        enabled: true,
-      },
-      semanticRecall: {
-        topK: 3,
-        messageRange: 2,
-        scope: "resource",
-      },
-    },
-  }),
+  memory: defaultMemory,
+  inputProcessors: [
+    new UnicodeNormalizer({
+      stripControlChars: true,
+      collapseWhitespace: true,
+    }),
+  ],
+  outputProcessors: [
+    new BatchPartsProcessor({
+      batchSize: 5,
+      maxWaitTime: 100,
+      emitOnNonText: true,
+    }),
+  ],
 });
