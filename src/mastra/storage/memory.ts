@@ -1,9 +1,10 @@
 import { Memory } from "@mastra/memory";
 import { storage } from "./storage";
 import { vector } from "./vector";
+import { fastembed } from "@mastra/fastembed";
 
 export const defaultMemory = new Memory({
-  embedder: "google/gemini-embedding-001",
+  embedder: fastembed,
   storage: storage,
   vector: vector,
   options: {

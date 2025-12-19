@@ -1,5 +1,4 @@
 import { Agent, AgentConfig, ToolsInput } from "@mastra/core/agent";
-import { mockAgents } from "./mock";
 import { defaultMemory } from "../storage/memory";
 import {
   BatchPartsProcessor,
@@ -8,7 +7,7 @@ import {
 import { fileLoader } from "./file-loader";
 
 async function fetchAgentsDefinition(): Promise<AgentConfig<string, ToolsInput>[]> {
-  const agents = await fileLoader("local-agent.json");
+  const agents = await fileLoader("../../local-agent.json");
   return agents;
 }
 
