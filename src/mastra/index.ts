@@ -13,7 +13,6 @@ import { storage } from "./storage/storage";
 import { notes } from "./mcp/server";
 import { vector } from "./storage/vector";
 import { summaryAgent } from "./agents/summary-agent";
-import { memoryAgent } from "./agents/memory-agent";
 import { chatRoute } from "@mastra/ai-sdk";
 import { agentLoader } from "./loader";
 
@@ -23,7 +22,6 @@ export const mastra = new Mastra({
     weatherAgent,
     researchAgent,
     summaryAgent,
-    memoryAgent,
     ...(await agentLoader()),
   },
   scorers: {

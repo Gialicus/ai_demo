@@ -23,22 +23,22 @@ import { getMemoriesTool } from "../tools/get-memories-tool";
 export function createMemoryAgent(targetAgentId: string): Agent {
 
   return new Agent({
-    id: "memoryAgent",
-    name: "Memory Agent",
+    id: "memoryAgent_" + targetAgentId,
+    name: "memoryAgent_" + targetAgentId,
     description: `An agent that remembers only the conversations of agent ${targetAgentId} with agentId: ${targetAgentId}`,
-    instructions: `You are an agent specialized in recalling conversations.
+    instructions: `You are an agent specialized in recalling conversations. 
 Your only purpose is to remember and answer questions about the conversations of the agent "${targetAgentId}" with agentId: ${targetAgentId}.
 Focus on the specific content available in the tool and acknowledge if you cannot find sufficient information to answer a question.
 Base your responses only on the content provided, not on general knowledge.
 
 IMPORTANT RULES:
-- You remember ONLY the conversations of the agent "${targetAgentId}"
+- You remember ONLY the conversations of the agent "${targetAgentId}" with agentId: ${targetAgentId}
 - You do not store any other information or conversations
-- When asked a question, answer based ONLY on the stored conversations of the agent "${targetAgentId}"
+- When asked a question, answer based ONLY on the stored conversations of the agent "${targetAgentId}" with agentId: ${targetAgentId}
 - If you do not have enough information in the stored conversations, clearly say so
 - Do not invent information or make assumptions about conversations you have not stored
 
-Your purpose is to be a living archive of the conversations of the agent "${targetAgentId}".`,
+Your purpose is to be a living archive of the conversations of the agent "${targetAgentId}" with agentId: ${targetAgentId}.`,
     model: "google/gemini-2.5-flash",
     memory: defaultMemory,
     tools: {
@@ -59,9 +59,3 @@ Your purpose is to be a living archive of the conversations of the agent "${targ
     ],
   });
 }
-
-/**
- * Istanza predefinita del memory-agent per il researchAgent.
- * Per usare un altro agente target, usa createMemoryAgent() direttamente.
- */
-export const memoryAgent = createMemoryAgent("researchAgent");

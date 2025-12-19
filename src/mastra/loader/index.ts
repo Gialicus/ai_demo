@@ -5,8 +5,9 @@ import {
   UnicodeNormalizer,
 } from "@mastra/core/processors";
 import { fileLoader } from "./file-loader";
+import { createMemoryAgent } from "../agents/memory-agent";
 
-async function fetchAgentsDefinition(): Promise<AgentConfig<string, ToolsInput>[]> {
+async function fetchAgentsDefinition() {
   const agents = await fileLoader("../../local-agent.json");
   return agents;
 }
@@ -14,27 +15,32 @@ async function fetchAgentsDefinition(): Promise<AgentConfig<string, ToolsInput>[
 export const agentLoader: () => Promise<
   Record<string, Agent<string, ToolsInput>>
 > = async () => {
-  const loadedAgents = await fetchAgentsDefinition();
-  const agents = loadedAgents.map(
-    (agent) =>
-      new Agent({
-        ...agent,
-        memory: agent?.memory ?? defaultMemory,
-        inputProcessors: [
-          new UnicodeNormalizer({
-            stripControlChars: true,
-            collapseWhitespace: true,
-          }),
-        ],
-        outputProcessors: [
-          new BatchPartsProcessor({
-            batchSize: 5,
-            maxWaitTime: 100,
-            emitOnNonText: true,
-          }),
-        ],
-      }),
-  );
+  const loadedAgentsDefinition = await fetchAgentsDefinition();
+  const agents: Agent<string, ToolsInput>[] = [];
+  for (const agentDefinition of loadedAgentsDefinition) {
+    const agent = new Agent({
+      ...agentDefinition,
+      memory: defaultMemory,
+      inputProcessors: [
+        new UnicodeNormalizer({
+          stripControlChars: true,
+          collapseWhitespace: true,
+        }),
+      ],
+      outputProcessors: [
+        new BatchPartsProcessor({
+          batchSize: 5,
+          maxWaitTime: 100,
+          emitOnNonText: true,
+        }),
+      ],
+    })
+    if (agentDefinition.withMemorySlave) {
+      const memoryAgent = createMemoryAgent(agent.id);
+      agents.push(memoryAgent);
+    }
+    agents.push(agent);
+  }
   return agents.reduce(
     (acc, agent) => {
       acc[agent.id] = agent;
