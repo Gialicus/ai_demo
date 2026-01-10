@@ -4,10 +4,13 @@ import {
   UnicodeNormalizer,
 } from "@mastra/core/processors";
 import { defaultMemory } from "../storage/memory";
-import { saveNoteTool } from "../tools/save-note-tool";
-import { savePlanTool } from "../tools/save-plan-tool";
 import { noteAgent } from "./note-agent";
 import { z } from "zod";
+import { savePlanTool } from "../tools/save-plan-tool";
+import { deletePlanTool } from "../tools/delete-plan-tool";
+import { listPlansTool } from "../tools/list-plans-tool";
+import { readPlanTool } from "../tools/read-plan-tool";
+import { updatePlanTool } from "../tools/update-plan-tool";
 
 // Schema for structured plan output
 export const planSchema = z.object({
@@ -99,8 +102,11 @@ Remember: A good plan is clear, complete, actionable, and considers all aspects 
     noteAgent,
   },
   tools: {
-    saveNoteTool,
     savePlanTool,
+    listPlansTool,
+    readPlanTool,
+    updatePlanTool,
+    deletePlanTool,
   },
   memory: defaultMemory,
   inputProcessors: [

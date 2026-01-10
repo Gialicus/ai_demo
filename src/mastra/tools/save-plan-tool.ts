@@ -17,7 +17,7 @@ export const savePlanTool = createTool({
       .string()
       .nonempty()
       .describe("The title of the plan."),
-    markdown: z
+    content: z
       .string()
       .nonempty()
       .describe("The complete plan content in markdown format."),
@@ -25,7 +25,7 @@ export const savePlanTool = createTool({
   outputSchema: z.string().nonempty(),
   execute: async (inputData) => {
     try {
-      const { planId, title, markdown } = inputData;
+      const { planId, title, content } = inputData;
       const sanitizedPlanId = planId.replace(/[^a-zA-Z0-9-_]/g, "_");
       const fileName = `plan_${sanitizedPlanId}_${Date.now()}.md`;
       const filePath = path.join(PLANS_DIR, fileName);
@@ -33,7 +33,7 @@ export const savePlanTool = createTool({
       await fs.mkdir(PLANS_DIR, { recursive: true });
       
       // Add metadata header to the plan file
-      const planContent = `# ${title}\n\n**Plan ID:** ${planId}\n**Created:** ${new Date().toISOString()}\n\n---\n\n${markdown}`;
+      const planContent = `# ${title}\n\n**Plan ID:** ${planId}\n**Created:** ${new Date().toISOString()}\n\n---\n\n${content}`;
       
       await fs.writeFile(filePath, planContent, "utf-8");
       return `Successfully saved plan "${title}" with ID "${planId}" to ${fileName}`;
