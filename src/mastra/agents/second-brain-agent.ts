@@ -7,6 +7,10 @@ import { defaultMemory } from "../storage/memory";
 import { plannerAgent } from "./planner-agent";
 import { noteAgent } from "./note-agent";
 import { workerAgent } from "./worker-agent";
+import { distillAgent } from "./distill-agent";
+import { linkAgent } from "./link-agent";
+import { inboxAgent } from "./inbox-agent";
+import { reviewAgent } from "./review-agent";
 import { saveNoteTool } from "../tools/save-note-tool";
 import { readNoteTool } from "../tools/read-note-tool";
 import { updateNoteTool } from "../tools/update-note-tool";
@@ -17,6 +21,9 @@ import { readPlanTool } from "../tools/read-plan-tool";
 import { updatePlanTool } from "../tools/update-plan-tool";
 import { deletePlanTool } from "../tools/delete-plan-tool";
 import { listPlansTool } from "../tools/list-plans-tool";
+import { archiveItemTool } from "../tools/archive-item-tool";
+import { createLinkTool } from "../tools/create-link-tool";
+import { createMocTool } from "../tools/create-moc-tool";
 import { promptLoader } from "../loader/prompt-loader";
 
 export const secondBrainAgent = new Agent({
@@ -29,6 +36,10 @@ export const secondBrainAgent = new Agent({
     plannerAgent,
     noteAgent,
     workerAgent,
+    distillAgent,
+    linkAgent,
+    inboxAgent,
+    reviewAgent,
   },
   tools: {
     // Note tools
@@ -43,6 +54,10 @@ export const secondBrainAgent = new Agent({
     updatePlanTool,
     deletePlanTool,
     listPlansTool,
+    // BASB tools
+    archiveItemTool,
+    createLinkTool,
+    createMocTool,
   },
   memory: defaultMemory,
   inputProcessors: [
@@ -59,6 +74,6 @@ export const secondBrainAgent = new Agent({
     }),
   ],
   defaultOptions: {
-    maxSteps: 15, // Allow multiple steps for full CODE cycle coordination
+    maxSteps: 20, // Allow multiple steps for full CODE cycle coordination with new agents
   },
 });
