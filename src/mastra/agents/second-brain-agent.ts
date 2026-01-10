@@ -1,0 +1,64 @@
+import { Agent } from "@mastra/core/agent";
+import {
+  BatchPartsProcessor,
+  UnicodeNormalizer,
+} from "@mastra/core/processors";
+import { defaultMemory } from "../storage/memory";
+import { plannerAgent } from "./planner-agent";
+import { noteAgent } from "./note-agent";
+import { workerAgent } from "./worker-agent";
+import { saveNoteTool } from "../tools/save-note-tool";
+import { readNoteTool } from "../tools/read-note-tool";
+import { updateNoteTool } from "../tools/update-note-tool";
+import { deleteNoteTool } from "../tools/delete-note-tool";
+import { listNotesTool } from "../tools/list-notes-tool";
+import { savePlanTool } from "../tools/save-plan-tool";
+import { readPlanTool } from "../tools/read-plan-tool";
+import { updatePlanTool } from "../tools/update-plan-tool";
+import { deletePlanTool } from "../tools/delete-plan-tool";
+import { listPlansTool } from "../tools/list-plans-tool";
+import { promptLoader } from "../loader/prompt-loader";
+
+export const secondBrainAgent = new Agent({
+  id: "secondBrainAgent",
+  name: "Second Brain Agent",
+  description: "An orchestrator agent that functions as a second brain, implementing Building a Second Brain (BASB) principles. It coordinates planning, note-taking, and task execution using CODE method and PARA organization.",
+  instructions: await promptLoader("second-brain-agent"),
+  model: "google/gemini-2.5-flash-lite",
+  agents: {
+    plannerAgent,
+    noteAgent,
+    workerAgent,
+  },
+  tools: {
+    // Note tools
+    saveNoteTool,
+    readNoteTool,
+    updateNoteTool,
+    deleteNoteTool,
+    listNotesTool,
+    // Plan tools
+    savePlanTool,
+    readPlanTool,
+    updatePlanTool,
+    deletePlanTool,
+    listPlansTool,
+  },
+  memory: defaultMemory,
+  inputProcessors: [
+    new UnicodeNormalizer({
+      stripControlChars: true,
+      collapseWhitespace: true,
+    }),
+  ],
+  outputProcessors: [
+    new BatchPartsProcessor({
+      batchSize: 5,
+      maxWaitTime: 100,
+      emitOnNonText: true,
+    }),
+  ],
+  defaultOptions: {
+    maxSteps: 15, // Allow multiple steps for full CODE cycle coordination
+  },
+});

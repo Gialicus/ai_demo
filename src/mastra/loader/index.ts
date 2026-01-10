@@ -6,9 +6,10 @@ import {
 } from "@mastra/core/processors";
 import { fileLoader } from "./file-loader";
 import { createMemoryAgent } from "../agents/memory-agent";
+import { join } from "node:path";
 
 async function fetchAgentsDefinition() {
-  const agents = await fileLoader("../../local-agent.json");
+  const agents = await fileLoader(join(__dirname, "./agents/example-agent.json"));
   return agents;
 }
 

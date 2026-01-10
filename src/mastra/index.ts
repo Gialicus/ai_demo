@@ -16,6 +16,7 @@ import { summaryAgent } from "./agents/summary-agent";
 import { plannerAgent } from "./agents/planner-agent";
 import { noteAgent } from "./agents/note-agent";
 import { workerAgent } from "./agents/worker-agent";
+import { secondBrainAgent } from "./agents/second-brain-agent";
 import { chatRoute } from "@mastra/ai-sdk";
 import { agentLoader } from "./loader";
 
@@ -28,6 +29,7 @@ export const mastra = new Mastra({
     plannerAgent,
     noteAgent,
     workerAgent,
+    secondBrainAgent,
     ...(await agentLoader()),
   },
   scorers: {
