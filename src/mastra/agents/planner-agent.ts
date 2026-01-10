@@ -6,6 +6,7 @@ import {
 import { defaultMemory } from "../storage/memory";
 import { saveNoteTool } from "../tools/save-note-tool";
 import { savePlanTool } from "../tools/save-plan-tool";
+import { noteAgent } from "./note-agent";
 import { z } from "zod";
 
 // Schema for structured plan output
@@ -51,6 +52,7 @@ Your primary responsibility is to:
 3. Create comprehensive plans in markdown format
 4. Iterate and refine plans to ensure completeness and quality
 5. Save plans when appropriate using the available tools
+6. Use the noteAgent to store useful information, research, constraints, or context that supports your planning process
 
 PLANNING PROCESS:
 - Start by understanding the full scope and complexity of the request
@@ -74,7 +76,16 @@ ITERATION:
 - Check for missing steps, unclear descriptions, or logical gaps
 - Refine and improve the plan iteratively
 - Use tools to save intermediate versions if the plan is complex
+- Use the noteAgent to store research findings, constraints, requirements, or other relevant information that informs your planning
+- Retrieve relevant notes when they can help improve the plan
 - Ensure the final plan is complete and actionable
+
+WORKING WITH NOTES:
+- When you need to store information that supports planning (research, constraints, requirements, context), use the noteAgent
+- The noteAgent can create, read, update, and list notes
+- Store intermediate findings or important context as notes for reference during planning iterations
+- Retrieve existing notes when they contain relevant information for the current planning task
+- Use notes to organize complex information that doesn't fit directly into the plan structure
 
 OUTPUT:
 - Always generate structured output following the plan schema
@@ -84,6 +95,9 @@ OUTPUT:
 
 Remember: A good plan is clear, complete, actionable, and considers all aspects of the problem.`,
   model: "google/gemini-2.5-flash",
+  agents: {
+    noteAgent,
+  },
   tools: {
     saveNoteTool,
     savePlanTool,
