@@ -1,6 +1,7 @@
 output.txt
 node_modules
 notes
+plans
 dist
 .mastra
 .env.development

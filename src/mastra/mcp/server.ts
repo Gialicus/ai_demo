@@ -1,6 +1,6 @@
 import { MCPServer } from "@mastra/mcp";
 import { resourceHandlers } from "./resources";
-import { writeNoteTool } from "../tools/write-note-tool";
+import { saveNoteTool } from "../tools/save-note-tool";
 import { promptHandlers } from "./prompts";
 import { researchAgent } from "../agents/research-agent";
 
@@ -10,7 +10,7 @@ export const notes = new MCPServer({
   version: "0.1.0",
   agents: { researchAgent },
   tools: {
-    write: writeNoteTool,
+    write: saveNoteTool,
   },
   resources: resourceHandlers,
   prompts: promptHandlers,
