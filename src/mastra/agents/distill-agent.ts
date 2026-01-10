@@ -14,7 +14,7 @@ export const distillAgent = new Agent({
   name: "Distill Agent",
   description: "An agent specialized in Progressive Summarization, implementing BASB principles to extract key insights and create progressive summaries of notes (highlights, executive summary, sparklines).",
   instructions: await promptLoader("distill-agent"),
-  model: "google/gemini-2.5-flash",
+  model: "google/gemini-2.5-flash-lite",
   tools: {
     readNoteTool,
     updateNoteTool,

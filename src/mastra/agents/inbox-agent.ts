@@ -15,7 +15,7 @@ export const inboxAgent = new Agent({
   name: "Inbox Agent",
   description: "An agent specialized in Inbox Processing, classifying captured items according to PARA and organizing them automatically according to BASB principles.",
   instructions: await promptLoader("inbox-agent"),
-  model: "google/gemini-2.5-flash",
+  model: "google/gemini-2.5-flash-lite",
   agents: {
     distillAgent,
   },

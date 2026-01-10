@@ -18,7 +18,7 @@ export const reviewAgent = new Agent({
   name: "Review Agent",
   description: "An agent specialized in Weekly/Monthly Reviews, maintaining PARA organization, identifying items to archive, and keeping the second brain clean and organized according to BASB principles.",
   instructions: await promptLoader("review-agent"),
-  model: "google/gemini-2.5-flash",
+  model: "google/gemini-2.5-flash-lite",
   tools: {
     listNotesTool,
     listPlansTool,
