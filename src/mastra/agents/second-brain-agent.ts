@@ -6,7 +6,6 @@ import {
 import { defaultMemory } from "../storage/memory";
 import { plannerAgent } from "./planner-agent";
 import { noteAgent } from "./note-agent";
-import { workerAgent } from "./worker-agent";
 import { distillAgent } from "./distill-agent";
 import { linkAgent } from "./link-agent";
 import { inboxAgent } from "./inbox-agent";
@@ -35,7 +34,6 @@ export const secondBrainAgent = new Agent({
   agents: {
     plannerAgent,
     noteAgent,
-    workerAgent,
     distillAgent,
     linkAgent,
     inboxAgent,

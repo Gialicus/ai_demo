@@ -1,45 +1,43 @@
 import { Mastra } from "@mastra/core/mastra";
 import { PinoLogger } from "@mastra/loggers";
 import { Observability } from "@mastra/observability";
-import { weatherWorkflow } from "./workflows/weather-workflow";
-import { weatherAgent } from "./agents/weather-agent";
+import { secondBrainWorkflow, secondBrainReviewWorkflow } from "./workflows/second-brain-workflow";
 import {
   toolCallAppropriatenessScorer,
   completenessScorer,
   translationScorer,
 } from "./scorers/weather-scorer";
-import { researchAgent } from "./agents/research-agent";
 import { storage } from "./storage/storage";
-import { notes } from "./mcp/server";
 import { vector } from "./storage/vector";
-import { summaryAgent } from "./agents/summary-agent";
 import { plannerAgent } from "./agents/planner-agent";
 import { noteAgent } from "./agents/note-agent";
-import { workerAgent } from "./agents/worker-agent";
 import { secondBrainAgent } from "./agents/second-brain-agent";
 import { chatRoute } from "@mastra/ai-sdk";
-import { agentLoader } from "./loader";
+import { distillAgent } from "./agents/distill-agent";
+import { inboxAgent } from "./agents/inbox-agent";
+import { linkAgent } from "./agents/link-agent";
+import { reviewAgent } from "./agents/review-agent";
 
 export const mastra = new Mastra({
-  workflows: { weatherWorkflow },
+  workflows: {
+    secondBrainWorkflow,
+    secondBrainReviewWorkflow,
+  },
   agents: {
-    weatherAgent,
-    researchAgent,
-    summaryAgent,
     plannerAgent,
     noteAgent,
-    workerAgent,
     secondBrainAgent,
-    ...(await agentLoader()),
+    inboxAgent,
+    reviewAgent,
+    distillAgent,
+    linkAgent,
   },
   scorers: {
     toolCallAppropriatenessScorer,
     completenessScorer,
     translationScorer,
   },
-  mcpServers: {
-    notes,
-  },
+  mcpServers: {},
   vectors: {
     sqlVector: vector,
   },
