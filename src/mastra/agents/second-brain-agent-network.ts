@@ -4,6 +4,7 @@ import {
   UnicodeNormalizer,
 } from "@mastra/core/processors";
 import { defaultMemory } from "../storage/memory";
+import { noteAgent } from "./note-agent";
 import { saveNoteTool } from "../tools/save-note-tool";
 import { readNoteTool } from "../tools/read-note-tool";
 import { updateNoteTool } from "../tools/update-note-tool";
@@ -18,15 +19,19 @@ import { archiveItemTool } from "../tools/archive-item-tool";
 import { createLinkTool } from "../tools/create-link-tool";
 import { createMocTool } from "../tools/create-moc-tool";
 import { promptLoader } from "../loader/prompt-loader";
+import { searchAgent } from "./search-agent";
 import { modelLoader } from "../loader/model-loader";
-import { google } from "@ai-sdk/google";
 
-export const secondBrainAgent = new Agent({
-  id: "secondBrainAgent",
-  name: "Second Brain Agent",
-  description: "A standalone orchestrator agent that automatically manages the complete CODE cycle (Capture, Organize, Distill, Express) implementing Building a Second Brain (BASB) principles by Tiago Forte. It automatically applies PARA organization and handles the full second brain workflow with minimal user intervention, using tools directly without dependencies on other agents.",
-  instructions: await promptLoader("second-brain-agent"),
+export const secondBrainAgentNetwork = new Agent({
+  id: "secondBrainAgentNetwork",
+  name: "Second Brain Agent Network",
+  description: "A network of agents that functions as a second brain, implementing Building a Second Brain (BASB) principles. It coordinates planning, note-taking, and task execution using CODE method and PARA organization.",
+  instructions: await promptLoader("second-brain-agent-network"),
   model: await modelLoader(),
+  agents: {
+    noteAgent,
+    searchAgent,
+  },
   tools: {
     // Note tools
     saveNoteTool,
@@ -44,10 +49,6 @@ export const secondBrainAgent = new Agent({
     archiveItemTool,
     createLinkTool,
     createMocTool,
-    // Web search tool
-    webSearch: google.tools.googleSearch({
-      mode: "MODE_DYNAMIC",
-    }),
   },
   memory: defaultMemory,
   inputProcessors: [
@@ -62,8 +63,5 @@ export const secondBrainAgent = new Agent({
       maxWaitTime: 100,
       emitOnNonText: true,
     }),
-  ],
-  defaultOptions: {
-    maxSteps: 25, // Higher limit for automatic CODE cycle management
-  },
+  ]
 });

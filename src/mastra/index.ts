@@ -9,6 +9,7 @@ import {
 import { storage } from "./storage/storage";
 import { vector } from "./storage/vector";
 import { noteAgent } from "./agents/note-agent";
+import { secondBrainAgentNetwork } from "./agents/second-brain-agent-network";
 import { secondBrainAgent } from "./agents/second-brain-agent";
 import { chatRoute } from "@mastra/ai-sdk";
 import { searchAgent } from "./agents/search-agent";
@@ -21,6 +22,7 @@ export const mastra = new Mastra({
   agents: {
     noteAgent,
     secondBrainAgent,
+    secondBrainAgentNetwork,
     searchAgent,
   },
   scorers: {

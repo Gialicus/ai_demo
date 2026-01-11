@@ -6,13 +6,14 @@ import {
 import { defaultMemory } from "../storage/memory";
 import { google } from "@ai-sdk/google";
 import { promptLoader } from "../loader/prompt-loader";
+import { modelLoader } from "../loader/model-loader";
 
 export const searchAgent = new Agent({
   id: "searchAgent",
   name: "Search Agent",
   description: "An agent specialized in searching the web and using its knowledge to find and provide information according to Building a Second Brain (BASB) principles.",
   instructions: await promptLoader("search-agent"),
-  model: "google/gemini-2.5-flash-lite",
+  model: await modelLoader(),
   tools: {
     webSearch: google.tools.googleSearch({
       mode: "MODE_DYNAMIC",
