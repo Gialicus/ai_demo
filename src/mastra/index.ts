@@ -13,11 +13,10 @@ import { secondBrainAgentNetwork } from "./agents/second-brain-agent-network";
 import { secondBrainAgent } from "./agents/second-brain-agent";
 import { chatRoute } from "@mastra/ai-sdk";
 import { searchAgent } from "./agents/search-agent";
-import { captureWorkflow } from "./workflows/capture-workflow";
 
 export const mastra = new Mastra({
   workflows: {
-    captureWorkflow,
+
   },
   agents: {
     noteAgent,
