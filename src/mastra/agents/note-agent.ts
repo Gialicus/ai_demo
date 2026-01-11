@@ -38,7 +38,4 @@ export const noteAgent = new Agent({
       emitOnNonText: true,
     }),
   ],
-  defaultOptions: {
-    maxSteps: 5, // Allow multiple operations in sequence if needed
-  },
 });

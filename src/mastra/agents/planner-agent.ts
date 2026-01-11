@@ -74,7 +74,4 @@ export const plannerAgent = new Agent({
       emitOnNonText: true,
     }),
   ],
-  defaultOptions: {
-    maxSteps: 10, // Allow multiple iterations for plan refinement
-  },
 });

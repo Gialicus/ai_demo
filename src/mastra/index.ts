@@ -1,7 +1,6 @@
 import { Mastra } from "@mastra/core/mastra";
 import { PinoLogger } from "@mastra/loggers";
 import { Observability } from "@mastra/observability";
-import { secondBrainWorkflow, secondBrainReviewWorkflow } from "./workflows/second-brain-workflow";
 import {
   toolCallAppropriatenessScorer,
   completenessScorer,
@@ -19,10 +18,7 @@ import { linkAgent } from "./agents/link-agent";
 import { reviewAgent } from "./agents/review-agent";
 
 export const mastra = new Mastra({
-  workflows: {
-    secondBrainWorkflow,
-    secondBrainReviewWorkflow,
-  },
+  workflows: {},
   agents: {
     plannerAgent,
     noteAgent,

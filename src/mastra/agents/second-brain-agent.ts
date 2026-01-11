@@ -70,8 +70,5 @@ export const secondBrainAgent = new Agent({
       maxWaitTime: 100,
       emitOnNonText: true,
     }),
-  ],
-  defaultOptions: {
-    maxSteps: 20, // Allow multiple steps for full CODE cycle coordination with new agents
-  },
+  ]
 });

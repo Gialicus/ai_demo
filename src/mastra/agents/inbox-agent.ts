@@ -4,9 +4,6 @@ import {
   UnicodeNormalizer,
 } from "@mastra/core/processors";
 import { defaultMemory } from "../storage/memory";
-import { readNoteTool } from "../tools/read-note-tool";
-import { listNotesTool } from "../tools/list-notes-tool";
-import { updateNoteTool } from "../tools/update-note-tool";
 import { distillAgent } from "./distill-agent";
 import { promptLoader } from "../loader/prompt-loader";
 
@@ -19,11 +16,7 @@ export const inboxAgent = new Agent({
   agents: {
     distillAgent,
   },
-  tools: {
-    readNoteTool,
-    listNotesTool,
-    updateNoteTool,
-  },
+  tools: {},
   memory: defaultMemory,
   inputProcessors: [
     new UnicodeNormalizer({
@@ -38,7 +31,4 @@ export const inboxAgent = new Agent({
       emitOnNonText: true,
     }),
   ],
-  defaultOptions: {
-    maxSteps: 20, // Allow multiple steps for processing inbox items
-  },
 });
