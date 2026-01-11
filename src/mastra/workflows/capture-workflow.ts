@@ -1,6 +1,5 @@
 import { createStep, createWorkflow } from "@mastra/core/workflows";
 import { z } from "zod";
-import { distillAgent } from "../agents/distill-agent";
 import { noteAgent } from "../agents/note-agent";
 import { searchAgent } from "../agents/search-agent";
 
@@ -18,7 +17,4 @@ export const captureWorkflow = createWorkflow({
         prompt: inputData.text,
     }))
     .then(createStep(noteAgent))
-    .map(async ({ inputData }) => ({
-        prompt: inputData.text,
-    }))
-    .then(createStep(distillAgent)).commit()
+.commit()

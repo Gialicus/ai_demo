@@ -4,12 +4,7 @@ import {
   UnicodeNormalizer,
 } from "@mastra/core/processors";
 import { defaultMemory } from "../storage/memory";
-import { plannerAgent } from "./planner-agent";
 import { noteAgent } from "./note-agent";
-import { distillAgent } from "./distill-agent";
-import { linkAgent } from "./link-agent";
-import { inboxAgent } from "./inbox-agent";
-import { reviewAgent } from "./review-agent";
 import { saveNoteTool } from "../tools/save-note-tool";
 import { readNoteTool } from "../tools/read-note-tool";
 import { updateNoteTool } from "../tools/update-note-tool";
@@ -24,6 +19,7 @@ import { archiveItemTool } from "../tools/archive-item-tool";
 import { createLinkTool } from "../tools/create-link-tool";
 import { createMocTool } from "../tools/create-moc-tool";
 import { promptLoader } from "../loader/prompt-loader";
+import { searchAgent } from "./search-agent";
 
 export const secondBrainAgent = new Agent({
   id: "secondBrainAgent",
@@ -32,12 +28,8 @@ export const secondBrainAgent = new Agent({
   instructions: await promptLoader("second-brain-agent"),
   model: "google/gemini-2.5-flash-lite",
   agents: {
-    plannerAgent,
     noteAgent,
-    distillAgent,
-    linkAgent,
-    inboxAgent,
-    reviewAgent,
+    searchAgent,
   },
   tools: {
     // Note tools
