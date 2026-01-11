@@ -16,9 +16,13 @@ import { distillAgent } from "./agents/distill-agent";
 import { inboxAgent } from "./agents/inbox-agent";
 import { linkAgent } from "./agents/link-agent";
 import { reviewAgent } from "./agents/review-agent";
+import { searchAgent } from "./agents/search-agent";
+import { captureWorkflow } from "./workflows/capture-workflow";
 
 export const mastra = new Mastra({
-  workflows: {},
+  workflows: {
+    captureWorkflow,
+  },
   agents: {
     plannerAgent,
     noteAgent,
@@ -27,6 +31,7 @@ export const mastra = new Mastra({
     reviewAgent,
     distillAgent,
     linkAgent,
+    searchAgent,
   },
   scorers: {
     toolCallAppropriatenessScorer,
