@@ -14,10 +14,12 @@ import { secondBrainAgent } from "./agents/second-brain-agent";
 import { chatRoute } from "@mastra/ai-sdk";
 import { searchAgent } from "./agents/search-agent";
 import { codeWorkflow } from "./workflows/code-workflow";
+import { mocFromFolderWorkflow } from "./workflows/moc-from-folder-workflow";
 
 export const mastra = new Mastra({
   workflows: {
     codeWorkflow,
+    mocFromFolderWorkflow,
   },
   agents: {
     noteAgent,

@@ -30,12 +30,14 @@
     "@mastra/rag": "^2.0.0-beta.2",
     "@types/unist": "^3.0.3",
     "gray-matter": "^4.0.3",
+    "node-cron": "^4.2.1",
     "remark-parse": "^11.0.0",
     "unified": "^11.0.5",
     "zod": "^4.1.13"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
+    "@types/node-cron": "^3.0.11",
     "mastra": "^1.0.0-beta.3",
     "typescript": "^5.9.3"
   }
