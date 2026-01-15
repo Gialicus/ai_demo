@@ -16,13 +16,11 @@ import { searchAgent } from "./agents/search-agent";
 import { ocrAgent } from "./agents/ocr-agent";
 import { codeWorkflow } from "./workflows/code-workflow";
 import { mocFromFolderWorkflow } from "./workflows/moc-from-folder-workflow";
-import { ocrFromFolderWorkflow } from "./workflows/ocr-from-folder-workflow";
 
 export const mastra = new Mastra({
   workflows: {
     codeWorkflow,
     mocFromFolderWorkflow,
-    ocrFromFolderWorkflow,
   },
   agents: {
     noteAgent,
