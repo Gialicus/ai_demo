@@ -4,11 +4,13 @@ import {
   UnicodeNormalizer,
 } from "@mastra/core/processors";
 import { defaultMemory } from "../storage/memory";
-import { saveNoteTool } from "../tools/save-note-tool";
-import { readNoteTool } from "../tools/read-note-tool";
-import { updateNoteTool } from "../tools/update-note-tool";
-import { deleteNoteTool } from "../tools/delete-note-tool";
-import { listNotesTool } from "../tools/list-notes-tool";
+import {
+  saveNoteTool,
+  readNoteTool,
+  updateNoteTool,
+  deleteNoteTool,
+  listNotesTool,
+} from "../tools/notes";
 import { promptLoader } from "../loader/prompt-loader";
 import { modelLoader } from "../loader/model-loader";
 

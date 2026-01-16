@@ -1,5 +1,7 @@
 import { createWorkflow, createStep } from "@mastra/core/workflows";
 import { z } from "zod";
+import { getSecondBrainAgent, generateWithAgent } from "./shared/agent-helpers";
+import { extractNoteId } from "./shared/parsing-helpers";
 
 // Input schema - prompt utente
 const codeInputSchema = z.object({
@@ -28,7 +30,7 @@ const captureStep = createStep({
   }),
   execute: async ({ inputData, mastra }) => {
     const { prompt } = inputData;
-    const agent = mastra.getAgent("secondBrainAgent");
+    const agent = getSecondBrainAgent(mastra);
     
     const capturePrompt = `CAPTURE phase: Capture the following information from the user prompt. Save it as a note with appropriate PARA classification (project_, area_, resource_, archive_, or inbox_ if uncertain). Focus on capturing what resonates - information that is surprising, useful, or personally meaningful.
 
@@ -41,20 +43,17 @@ Instructions:
 4. Use saveNoteTool to save the note
 5. Return the noteId and confirmation that capture was successful`;
 
-    const result = await agent.generate(capturePrompt);
+    const resultText = await generateWithAgent(agent, capturePrompt);
     
-    // Estrai noteId dal testo
-    const noteIdMatch = result.text?.match(/noteId[:\s]+([^\s\n]+)/i) || 
-                       result.text?.match(/ID[:\s]+([^\s\n]+)/i) ||
-                       result.text?.match(/note[:\s]+([^\s\n]+)/i);
-    const noteId = noteIdMatch?.[1];
+    // Estrai noteId dal testo usando utility
+    const noteId = extractNoteId(resultText);
     
     return {
       noteId: noteId || undefined,
-      captured: result.text?.toLowerCase().includes("captured") || 
-                result.text?.toLowerCase().includes("saved") ||
+      captured: resultText.toLowerCase().includes("captured") || 
+                resultText.toLowerCase().includes("saved") ||
                 noteId !== undefined,
-      text: result.text || "",
+      text: resultText,
     };
   },
 });
@@ -85,7 +84,7 @@ const organizeStep = createStep({
       };
     }
     
-    const agent = mastra.getAgent("secondBrainAgent");
+    const agent = getSecondBrainAgent(mastra);
     
     const organizePrompt = `ORGANIZE phase: Organize the note with ID "${noteId}" according to PARA method (Projects, Areas, Resources, Archives).
 
@@ -98,15 +97,15 @@ Instructions:
 6. Create MOC using createMocTool if the topic warrants it
 7. Return confirmation that organization was successful`;
 
-    const result = await agent.generate(organizePrompt);
+    const resultText = await generateWithAgent(agent, organizePrompt);
     
     return {
       noteId,
-      organized: result.text?.toLowerCase().includes("organized") ||
-                result.text?.toLowerCase().includes("updated") ||
-                result.text?.toLowerCase().includes("linked") ||
-                result.text?.toLowerCase().includes("success"),
-      text: result.text || "",
+      organized: resultText.toLowerCase().includes("organized") ||
+                resultText.toLowerCase().includes("updated") ||
+                resultText.toLowerCase().includes("linked") ||
+                resultText.toLowerCase().includes("success"),
+      text: resultText,
     };
   },
 });
@@ -137,7 +136,7 @@ const distillStep = createStep({
       };
     }
     
-    const agent = mastra.getAgent("secondBrainAgent");
+    const agent = getSecondBrainAgent(mastra);
     
     const distillPrompt = `DISTILL phase: Create progressive summaries for the note with ID "${noteId}" (highlights, executive summary, sparklines).
 
@@ -152,15 +151,15 @@ Instructions:
 5. Use webSearch tool if needed to gather additional context
 6. Return confirmation that distillation was successful`;
 
-    const result = await agent.generate(distillPrompt);
+    const resultText = await generateWithAgent(agent, distillPrompt);
     
     return {
       noteId,
-      distilled: result.text?.toLowerCase().includes("distilled") ||
-                result.text?.toLowerCase().includes("summary") ||
-                result.text?.toLowerCase().includes("updated") ||
-                result.text?.toLowerCase().includes("success"),
-      text: result.text || "",
+      distilled: resultText.toLowerCase().includes("distilled") ||
+                resultText.toLowerCase().includes("summary") ||
+                resultText.toLowerCase().includes("updated") ||
+                resultText.toLowerCase().includes("success"),
+      text: resultText,
     };
   },
 });
@@ -184,7 +183,7 @@ const expressStep = createStep({
     const noteId = inputData.noteId || captureResult?.noteId;
     const originalPrompt = getInitData().prompt;
     
-    const agent = mastra.getAgent("secondBrainAgent");
+    const agent = getSecondBrainAgent(mastra);
     
     const expressPrompt = `EXPRESS phase: Transform the knowledge from note "${noteId}" into concrete outputs that address the user's original prompt.
 
@@ -200,12 +199,12 @@ Instructions:
 7. Combine insights to create valuable output
 8. Return the final output that expresses the knowledge in a useful format`;
 
-    const result = await agent.generate(expressPrompt);
+    const resultText = await generateWithAgent(agent, expressPrompt);
     
     return {
       noteId,
-      expressed: result.text !== undefined && result.text.length > 0,
-      output: result.text || "Output generated successfully",
+      expressed: resultText.length > 0,
+      output: resultText || "Output generated successfully",
     };
   },
 });

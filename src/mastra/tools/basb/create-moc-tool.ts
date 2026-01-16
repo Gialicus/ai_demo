@@ -2,10 +2,10 @@ import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 import path from "node:path";
 import fs from "fs/promises";
-import { saveNoteTool } from "./save-note-tool";
-import { NOTES_DIR } from "../constants/paths";
-import { findMatchingFiles, readMarkdownFile, parseFileMetadata } from "../utils/file-operations";
-import { sanitizeId } from "../utils/sanitization";
+import { saveNoteTool } from "../notes/save-note-tool";
+import { NOTES_DIR } from "../../constants/paths";
+import { findMatchingFiles, readMarkdownFile, parseFileMetadata } from "../../utils/file-operations";
+import { sanitizeId } from "../../utils/sanitization";
 
 export const createMocTool = createTool({
   id: "create-moc",

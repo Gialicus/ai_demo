@@ -2,10 +2,10 @@ import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 import path from "node:path";
 import fs from "fs/promises";
-import { updateNoteTool } from "./update-note-tool";
-import { updatePlanTool } from "./update-plan-tool";
-import { readNoteTool } from "./read-note-tool";
-import { readPlanTool } from "./read-plan-tool";
+import { updateNoteTool } from "../notes/update-note-tool";
+import { updatePlanTool } from "../plans/update-plan-tool";
+import { readNoteTool } from "../notes/read-note-tool";
+import { readPlanTool } from "../plans/read-plan-tool";
 
 const NOTES_DIR = path.resolve(__dirname, "../../../notes");
 const PLANS_DIR = path.resolve(__dirname, "../../../plans");

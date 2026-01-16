@@ -2,11 +2,10 @@ import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 import path from "node:path";
 import fs from "fs/promises";
-import { NOTES_DIR } from "../constants/paths";
-import { findMatchingFiles, readMarkdownFile, parseFileMetadata, getFileContent } from "../utils/file-operations";
-import { sanitizeId } from "../utils/sanitization";
-import { noteIdSchema } from "../schemas/note-schemas";
-import { FileMetadata } from "../utils/file-operations";
+import { NOTES_DIR } from "../../constants/paths";
+import { findMatchingFiles, readMarkdownFile, parseFileMetadata, getFileContent, FileMetadata } from "../../utils/file-operations";
+import { sanitizeId } from "../../utils/sanitization";
+import { noteIdSchema } from "../../schemas/note-schemas";
 
 /**
  * Helper function to build note content with metadata

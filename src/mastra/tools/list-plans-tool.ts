@@ -2,8 +2,8 @@ import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 import path from "node:path";
 import fs from "fs/promises";
-
-const PLANS_DIR = path.resolve(__dirname, "../../../plans");
+import { PLANS_DIR } from "../constants/paths";
+import { readMarkdownFile, parseFileMetadata } from "../utils/file-operations";
 
 export const listPlansTool = createTool({
   id: "list-plans",
@@ -38,7 +38,7 @@ export const listPlansTool = createTool({
         return "No plans found in the plans directory.";
       }
       
-      // Parse metadata from each plan file
+      // Parse metadata from each plan file using utility
       const plansMetadata: Array<{
         planId: string;
         title: string;
@@ -50,48 +50,29 @@ export const listPlansTool = createTool({
       for (const file of planFiles) {
         try {
           const filePath = path.join(PLANS_DIR, file);
-          const content = await fs.readFile(filePath, "utf-8");
-          const lines = content.split("\n");
+          const content = await readMarkdownFile(filePath);
+          const metadata = parseFileMetadata(content, "Plan ID");
           
-          const metadataEndIndex = lines.findIndex((line) => line.trim() === "---");
-          if (metadataEndIndex === -1) continue;
-          
-          const metadataLines = lines.slice(0, metadataEndIndex);
-          
-          let planId = "";
-          let title = "";
-          let createdAt = "";
-          let updatedAt: string | undefined;
-          
-          for (const line of metadataLines) {
-            if (line.includes("**Plan ID:**")) {
-              planId = line.split("**Plan ID:**")[1].trim();
-            } else if (line.includes("**Created:**")) {
-              createdAt = line.split("**Created:**")[1].trim();
-            } else if (line.includes("**Updated:**")) {
-              updatedAt = line.split("**Updated:**")[1].trim();
-            } else if (line.startsWith("# ")) {
-              title = line.substring(2).trim();
-            }
+          // Skip if metadata is invalid
+          if (!metadata.id || !metadata.title) {
+            continue;
           }
           
           // Apply filters
-          if (planIdFilter && !planId.toLowerCase().includes(planIdFilter.toLowerCase())) {
+          if (planIdFilter && !metadata.id.toLowerCase().includes(planIdFilter.toLowerCase())) {
             continue;
           }
-          if (titleFilter && !title.toLowerCase().includes(titleFilter.toLowerCase())) {
+          if (titleFilter && !metadata.title.toLowerCase().includes(titleFilter.toLowerCase())) {
             continue;
           }
           
-          if (planId && title) {
-            plansMetadata.push({
-              planId,
-              title,
-              createdAt,
-              updatedAt,
-              fileName: file,
-            });
-          }
+          plansMetadata.push({
+            planId: metadata.id,
+            title: metadata.title,
+            createdAt: metadata.createdAt || "",
+            updatedAt: metadata.updatedAt,
+            fileName: file,
+          });
         } catch (error) {
           // Skip files that can't be read
           continue;

@@ -2,8 +2,8 @@ import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 import path from "node:path";
 import fs from "fs/promises";
-
-const NOTES_DIR = path.resolve(__dirname, "../../../notes");
+import { NOTES_DIR } from "../constants/paths";
+import { readMarkdownFile, parseFileMetadata } from "../utils/file-operations";
 
 export const listNotesTool = createTool({
   id: "list-notes",
@@ -38,7 +38,7 @@ export const listNotesTool = createTool({
         return "No notes found in the notes directory.";
       }
       
-      // Parse metadata from each note file
+      // Parse metadata from each note file using utility
       const notesMetadata: Array<{
         noteId: string;
         title: string;
@@ -50,48 +50,29 @@ export const listNotesTool = createTool({
       for (const file of noteFiles) {
         try {
           const filePath = path.join(NOTES_DIR, file);
-          const content = await fs.readFile(filePath, "utf-8");
-          const lines = content.split("\n");
+          const content = await readMarkdownFile(filePath);
+          const metadata = parseFileMetadata(content, "Note ID");
           
-          const metadataEndIndex = lines.findIndex((line) => line.trim() === "---");
-          if (metadataEndIndex === -1) continue;
-          
-          const metadataLines = lines.slice(0, metadataEndIndex);
-          
-          let noteId = "";
-          let title = "";
-          let createdAt = "";
-          let updatedAt: string | undefined;
-          
-          for (const line of metadataLines) {
-            if (line.includes("**Note ID:**")) {
-              noteId = line.split("**Note ID:**")[1].trim();
-            } else if (line.includes("**Created:**")) {
-              createdAt = line.split("**Created:**")[1].trim();
-            } else if (line.includes("**Updated:**")) {
-              updatedAt = line.split("**Updated:**")[1].trim();
-            } else if (line.startsWith("# ")) {
-              title = line.substring(2).trim();
-            }
+          // Skip if metadata is invalid
+          if (!metadata.id || !metadata.title) {
+            continue;
           }
           
           // Apply filters
-          if (noteIdFilter && !noteId.toLowerCase().includes(noteIdFilter.toLowerCase())) {
+          if (noteIdFilter && !metadata.id.toLowerCase().includes(noteIdFilter.toLowerCase())) {
             continue;
           }
-          if (titleFilter && !title.toLowerCase().includes(titleFilter.toLowerCase())) {
+          if (titleFilter && !metadata.title.toLowerCase().includes(titleFilter.toLowerCase())) {
             continue;
           }
           
-          if (noteId && title) {
-            notesMetadata.push({
-              noteId,
-              title,
-              createdAt,
-              updatedAt,
-              fileName: file,
-            });
-          }
+          notesMetadata.push({
+            noteId: metadata.id,
+            title: metadata.title,
+            createdAt: metadata.createdAt || "",
+            updatedAt: metadata.updatedAt,
+            fileName: file,
+          });
         } catch (error) {
           // Skip files that can't be read
           continue;

@@ -2,31 +2,23 @@ import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 import path from "node:path";
 import fs from "fs/promises";
-
-const NOTES_DIR = path.resolve(__dirname, "../../../notes");
+import { NOTES_DIR } from "../constants/paths";
+import { sanitizeId } from "../utils/sanitization";
+import { noteIdSchema, noteTitleSchema, noteContentSchema } from "../schemas/note-schemas";
 
 export const saveNoteTool = createTool({
   id: "save-note",
   description: "Save a note in markdown format. Useful for storing notes, intermediate results, or any text content.",
   inputSchema: z.object({
-    noteId: z
-      .string()
-      .nonempty()
-      .describe("Unique identifier for the note. This will be used as part of the filename."),
-    title: z
-      .string()
-      .nonempty()
-      .describe("The title of the note."),
-    content: z
-      .string()
-      .nonempty()
-      .describe("The markdown content of the note."),
+    noteId: noteIdSchema,
+    title: noteTitleSchema,
+    content: noteContentSchema,
   }),
   outputSchema: z.string().nonempty(),
   execute: async (inputData) => {
     try {
       const { noteId, title, content } = inputData;
-      const sanitizedNoteId = noteId.replace(/[^a-zA-Z0-9-_]/g, "_");
+      const sanitizedNoteId = sanitizeId(noteId);
       const fileName = `note_${sanitizedNoteId}_${Date.now()}.md`;
       const filePath = path.join(NOTES_DIR, fileName);
       

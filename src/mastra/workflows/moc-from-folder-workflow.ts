@@ -2,7 +2,9 @@ import { createWorkflow, createStep } from "@mastra/core/workflows";
 import { z } from "zod";
 import fs from "fs/promises";
 import path from "node:path";
-import { createMocTool } from "../tools/create-moc-tool";
+import { createMocTool } from "../tools/basb/create-moc-tool";
+import { getSecondBrainAgent, generateWithAgent } from "./shared/agent-helpers";
+import { extractTopic, extractDescription } from "./shared/parsing-helpers";
 
 // Input schema - percorso cartella
 const mocFromFolderInputSchema = z.object({
@@ -148,7 +150,7 @@ const detectTopicStep = createStep({
       `Note ${index + 1}: "${file.title}" (ID: ${file.noteId})\n${file.content.substring(0, 500)}...`
     ).join("\n\n---\n\n");
     
-    const agent = mastra.getAgent("secondBrainAgent");
+    const agent = getSecondBrainAgent(mastra);
     
     const detectTopicPrompt = `Analyze the following notes and determine a common topic/theme for a Map of Content (MOC). 
 
@@ -167,18 +169,11 @@ Format your response as:
 Topic: [topic name]
 Description: [brief description]`;
 
-    const result = await agent.generate(detectTopicPrompt);
+    const resultText = await generateWithAgent(agent, detectTopicPrompt);
     
-    // Estrai topic e description dal risultato
-    const topicMatch = result.text?.match(/Topic[:\s]+(.+?)(?:\n|Description|$)/i);
-    const descriptionMatch = result.text?.match(/Description[:\s]+(.+?)(?:\n|$)/i);
-    
-    const topic = topicMatch?.[1]?.trim() || 
-                  result.text?.split("\n")[0]?.trim() || 
-                  "General Notes";
-    
-    const description = descriptionMatch?.[1]?.trim() || 
-                       result.text?.substring(result.text.indexOf(topic) + topic.length).trim().substring(0, 200);
+    // Estrai topic e description dal risultato usando utilities
+    const topic = extractTopic(resultText) || "General Notes";
+    const description = extractDescription(resultText);
     
     return {
       topic,
