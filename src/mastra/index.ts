@@ -16,6 +16,7 @@ import { searchAgent } from "./agents/search-agent";
 import { ocrAgent } from "./agents/ocr-agent";
 import { codeWorkflow } from "./workflows/code-workflow";
 import { mocFromFolderWorkflow } from "./workflows/moc-from-folder-workflow";
+import { plannerAgent } from "./agents/planner-agent";
 
 export const mastra = new Mastra({
   workflows: {
@@ -28,6 +29,7 @@ export const mastra = new Mastra({
     secondBrainAgentNetwork,
     searchAgent,
     ocrAgent,
+    plannerAgent,
   },
   scorers: {
     toolCallAppropriatenessScorer,
