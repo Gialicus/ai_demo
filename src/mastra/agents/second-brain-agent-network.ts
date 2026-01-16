@@ -15,12 +15,12 @@ import { readPlanTool } from "../tools/read-plan-tool";
 import { updatePlanTool } from "../tools/update-plan-tool";
 import { deletePlanTool } from "../tools/delete-plan-tool";
 import { listPlansTool } from "../tools/list-plans-tool";
-import { archiveItemTool } from "../tools/archive-item-tool";
 import { createLinkTool } from "../tools/create-link-tool";
 import { createMocTool } from "../tools/create-moc-tool";
 import { promptLoader } from "../loader/prompt-loader";
 import { searchAgent } from "./search-agent";
 import { modelLoader } from "../loader/model-loader";
+import { archiveItemTool } from "../tools/basb";
 
 export const secondBrainAgentNetwork = new Agent({
   id: "secondBrainAgentNetwork",
